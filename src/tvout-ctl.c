@@ -25,8 +25,6 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xvlib.h>
 
-#include <glib.h>
-
 #include "tvout-ctl.h"
 
 enum {
@@ -48,8 +46,6 @@ struct _TVoutCtl {
   Display *dpy;
   XvPortID port;
   int event_base;
-  GIOChannel *io;
-  guint watch;
   Atom atoms[NUM_ATTRS];
   int values[NUM_ATTRS];
   void *ui_data;
@@ -161,11 +157,8 @@ union xeu {
   XvPortNotifyEvent port_notify_event;
 };
 
-static gboolean xv_io_func (GIOChannel *source,
-                            GIOCondition condition,
-                            gpointer data)
+static void xv_io_func (TVoutCtl *ctl)
 {
-  TVoutCtl *ctl = data;
   union xeu xe;
   XvPortNotifyEvent *notify = &xe.port_notify_event;
   int attr_idx, value, r;
@@ -205,39 +198,15 @@ static gboolean xv_io_func (GIOChannel *source,
       break;
     }
   }
-
-  return TRUE;
 }
 
 static bool xv_events_init (TVoutCtl *ctl)
 {
-  GIOStatus s;
   int r;
 
-  ctl->io = g_io_channel_unix_new (ConnectionNumber (ctl->dpy));
-  if (!ctl->io)
-    return false;
-
-  s = g_io_channel_set_encoding (ctl->io, NULL, NULL);
-  if (s != G_IO_STATUS_NORMAL) {
-    g_io_channel_unref (ctl->io);
-    return false;
-  }
-
-  g_io_channel_set_buffered (ctl->io, FALSE);
-
-  ctl->watch = g_io_add_watch (ctl->io, G_IO_IN | G_IO_PRI, xv_io_func, ctl);
-  if (!ctl->watch) {
-    g_io_channel_unref (ctl->io);
-    return false;
-  }
-
   r = XvSelectPortNotify (ctl->dpy, ctl->port, True);
-  if (r != Success) {
-    g_source_remove (ctl->watch);
-    g_io_channel_unref (ctl->io);
+  if (r != Success)
     return false;
-  }
 
   return true;
 }
@@ -245,8 +214,6 @@ static bool xv_events_init (TVoutCtl *ctl)
 static void xv_events_exit (TVoutCtl *ctl)
 {
   XvSelectPortNotify (ctl->dpy, ctl->port, False);
-  g_source_remove (ctl->watch);
-  g_io_channel_unref (ctl->io);
 }
 
 static bool xv_update_attributes (TVoutCtl *ctl)
@@ -310,6 +277,22 @@ void tvout_ctl_exit (TVoutCtl *ctl)
   free (ctl);
 }
 
+int tvout_ctl_fd (TVoutCtl *ctl)
+{
+  if (!ctl)
+    return -1;
+
+  return ConnectionNumber (ctl->dpy);
+}
+
+void tvout_ctl_fd_ready (TVoutCtl *ctl)
+{
+  if (!ctl)
+    return;
+
+  xv_io_func (ctl);
+}
+
 static void xv_set_attribute (TVoutCtl *ctl, int attr_idx, int value)
 {
   int r;
@@ -324,7 +307,7 @@ static void xv_set_attribute (TVoutCtl *ctl, int attr_idx, int value)
   if (r != Success)
     return;
 
-  xv_io_func (NULL, 0, ctl);
+  xv_io_func (ctl);
 }
 
 void tvout_ctl_set_enable (TVoutCtl *ctl, int value)

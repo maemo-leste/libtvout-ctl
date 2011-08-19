@@ -25,6 +25,9 @@ typedef struct _TVoutCtl TVoutCtl;
 TVoutCtl *tvout_ctl_init (void *ui_data);
 void tvout_ctl_exit (TVoutCtl *ctl);
 
+int tvout_ctl_fd (TVoutCtl *ctl);
+void tvout_ctl_fd_ready (TVoutCtl *ctl);
+
 void tvout_ctl_set_enable (TVoutCtl *ctl, int value);
 void tvout_ctl_set_tv_std (TVoutCtl *ctl, int value);
 void tvout_ctl_set_aspect (TVoutCtl *ctl, int value);

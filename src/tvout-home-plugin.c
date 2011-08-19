@@ -37,6 +37,9 @@ struct _TVoutHomePluginPrivate
   GtkWidget *scale_dec_button;
   GtkWidget *scale_inc_button;
   GtkWidget *scale_label;
+
+  GIOChannel *io;
+  guint watch;
 };
 
 void tvout_ui_set_enable (gpointer data, gint value)
@@ -266,6 +269,58 @@ static GtkWidget *create_ui (TVoutHomePlugin *self)
   return vbox;
 }
 
+static gboolean tvout_io_func (GIOChannel *source,
+			       GIOCondition condition,
+			       gpointer data)
+{
+  TVoutHomePluginPrivate *priv = data;
+
+  tvout_ctl_fd_ready (priv->tvout_ctl);
+
+  return TRUE;
+}
+
+static void create_io_channel (TVoutHomePluginPrivate *priv)
+{
+  GIOStatus s;
+  int fd = tvout_ctl_fd (priv->tvout_ctl);
+
+  if (fd < 0)
+    return;
+
+  priv->io = g_io_channel_unix_new (fd);
+  if (!priv->io)
+    return;
+
+  s = g_io_channel_set_encoding (priv->io, NULL, NULL);
+  if (s != G_IO_STATUS_NORMAL) {
+    g_io_channel_unref (priv->io);
+    priv->io = NULL;
+    return;
+  }
+
+  g_io_channel_set_buffered (priv->io, FALSE);
+
+  priv->watch = g_io_add_watch (priv->io, G_IO_IN | G_IO_PRI, tvout_io_func, priv);
+  if (!priv->watch) {
+    g_io_channel_unref (priv->io);
+    priv->io = NULL;
+    return;
+  }
+}
+
+static void destroy_io_channel (TVoutHomePluginPrivate *priv)
+{
+  if (priv->watch) {
+    g_source_remove (priv->watch);
+    priv->watch = 0;
+  }
+  if (priv->io) {
+    g_io_channel_unref (priv->io);
+    priv->io = NULL;
+  }
+}
+
 static void
 tvout_home_plugin_init (TVoutHomePlugin *self)
 {
@@ -275,6 +330,8 @@ tvout_home_plugin_init (TVoutHomePlugin *self)
   self->priv = priv = TVOUT_HOME_PLUGIN_GET_PRIVATE (self);
 
   priv->tvout_ctl = tvout_ctl_init (priv);
+
+  create_io_channel (priv);
 
   contents = create_ui (self);
 
@@ -289,6 +346,8 @@ tvout_home_plugin_init (TVoutHomePlugin *self)
 static void tvout_home_plugin_finalize (GObject *self)
 {
   TVoutHomePluginPrivate *priv = TVOUT_HOME_PLUGIN (self)->priv;
+
+  destroy_io_channel (priv);
 
   tvout_ctl_exit (priv->tvout_ctl);
 
