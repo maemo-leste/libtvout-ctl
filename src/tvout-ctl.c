@@ -265,7 +265,6 @@ static gboolean xv_update_attributes (TVoutCtl *ctl)
 
 TVoutCtl *tvout_ctl_init (gpointer ui_data)
 {
-  int r;
   TVoutCtl *ctl;
 
   ctl = malloc (sizeof *ctl);
