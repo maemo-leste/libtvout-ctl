@@ -63,7 +63,7 @@ static gboolean xv_init (TVoutCtl *ctl)
   unsigned int adaptor_idx;
   int found = 0;
   int r;
-  XvPortID port;
+  XvPortID port = 0;
 
   dpy = XOpenDisplay (NULL);
   if (!dpy)
