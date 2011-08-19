@@ -20,6 +20,10 @@
 #ifndef TVOUT_CTL_H
 #define TVOUT_CTL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _TVoutCtl TVoutCtl;
 
 TVoutCtl *tvout_ctl_init (void *ui_data);
@@ -42,5 +46,9 @@ void tvout_ui_set_enable (void *ui_data, int value);
 void tvout_ui_set_tv_std (void *ui_data, int value);
 void tvout_ui_set_aspect (void *ui_data, int value);
 void tvout_ui_set_scale (void *ui_data, int value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
