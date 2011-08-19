@@ -155,19 +155,24 @@ static void update_ui (TVoutCtl *ctl, int attr_idx, int value)
   }
 }
 
+union xeu {
+  XEvent event;
+  XvPortNotifyEvent port_notify_event;
+};
+
 static gboolean xv_io_func (GIOChannel *source,
                             GIOCondition condition,
                             gpointer data)
 {
   TVoutCtl *ctl = data;
-  XEvent e;
-  XvPortNotifyEvent *notify = (XvPortNotifyEvent *)&e;
+  union xeu xe;
+  XvPortNotifyEvent *notify = &xe.port_notify_event;
   int attr_idx, value, r;
 
   while (XPending (ctl->dpy)) {
-    XNextEvent (ctl->dpy, &e);
+    XNextEvent (ctl->dpy, &xe.event);
 
-    if (e.type != ctl->event_base + XvPortNotify)
+    if (notify->type != ctl->event_base + XvPortNotify)
       continue;
 
     for (attr_idx = 0; attr_idx < NUM_ATTRS; attr_idx++) {
