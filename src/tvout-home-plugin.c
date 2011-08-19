@@ -1,6 +1,6 @@
 /*
  * Maemo TV out control home plugin
- * Copyright (C) 2010  Ville Syrjälä <syrjala@sci.fi>
+ * Copyright (C) 2010-2011  Ville Syrjälä <syrjala@sci.fi>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
