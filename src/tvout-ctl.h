@@ -20,26 +20,24 @@
 #ifndef TVOUT_CTL_H
 #define TVOUT_CTL_H
 
-#include <glib.h>
-
 typedef struct _TVoutCtl TVoutCtl;
 
-TVoutCtl *tvout_ctl_init (gpointer ui_data);
+TVoutCtl *tvout_ctl_init (void *ui_data);
 void tvout_ctl_exit (TVoutCtl *ctl);
 
-void tvout_ctl_set_enable (TVoutCtl *ctl, gint value);
-void tvout_ctl_set_tv_std (TVoutCtl *ctl, gint value);
-void tvout_ctl_set_aspect (TVoutCtl *ctl, gint value);
-void tvout_ctl_set_scale (TVoutCtl *ctl, gint value);
+void tvout_ctl_set_enable (TVoutCtl *ctl, int value);
+void tvout_ctl_set_tv_std (TVoutCtl *ctl, int value);
+void tvout_ctl_set_aspect (TVoutCtl *ctl, int value);
+void tvout_ctl_set_scale (TVoutCtl *ctl, int value);
 
-gint tvout_ctl_get_enable (TVoutCtl *ctl);
-gint tvout_ctl_get_tv_std (TVoutCtl *ctl);
-gint tvout_ctl_get_aspect (TVoutCtl *ctl);
-gint tvout_ctl_get_scale (TVoutCtl *ctl);
+int tvout_ctl_get_enable (TVoutCtl *ctl);
+int tvout_ctl_get_tv_std (TVoutCtl *ctl);
+int tvout_ctl_get_aspect (TVoutCtl *ctl);
+int tvout_ctl_get_scale (TVoutCtl *ctl);
 
-void tvout_ui_set_enable (gpointer ui_data, gint value);
-void tvout_ui_set_tv_std (gpointer ui_data, gint value);
-void tvout_ui_set_aspect (gpointer ui_data, gint value);
-void tvout_ui_set_scale (gpointer ui_data, gint value);
+void tvout_ui_set_enable (void *ui_data, int value);
+void tvout_ui_set_tv_std (void *ui_data, int value);
+void tvout_ui_set_aspect (void *ui_data, int value);
+void tvout_ui_set_scale (void *ui_data, int value);
 
 #endif

@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,10 +52,10 @@ struct _TVoutCtl {
   guint watch;
   Atom atoms[NUM_ATTRS];
   int values[NUM_ATTRS];
-  gpointer ui_data;
+  void *ui_data;
 };
 
-static gboolean xv_init (TVoutCtl *ctl)
+static bool xv_init (TVoutCtl *ctl)
 {
   Display *dpy;
   unsigned int version, revision, request_base, event_base, error_base;
@@ -67,18 +68,18 @@ static gboolean xv_init (TVoutCtl *ctl)
 
   dpy = XOpenDisplay (NULL);
   if (!dpy)
-    return FALSE;
+    return false;
 
   r = XvQueryExtension (dpy, &version, &revision, &request_base, &event_base, &error_base);
   if (r != Success){
     XCloseDisplay (dpy);
-    return FALSE;
+    return false;
   }
 
   r = XvQueryAdaptors (dpy, DefaultRootWindow (dpy), &num_adaptors, &adaptors);
   if (r != Success) {
     XCloseDisplay (dpy);
-    return FALSE;
+    return false;
   }
 
   for (adaptor_idx = 0; adaptor_idx < num_adaptors; adaptor_idx++) {
@@ -122,14 +123,14 @@ static gboolean xv_init (TVoutCtl *ctl)
 
   if (found != NUM_ATTRS) {
     XCloseDisplay (dpy);
-    return FALSE;
+    return false;
   }
 
   ctl->dpy = dpy;
   ctl->event_base = event_base;
   ctl->port = port;
 
-  return TRUE;
+  return true;
 }
 
 static void xv_exit (TVoutCtl *ctl)
@@ -208,19 +209,19 @@ static gboolean xv_io_func (GIOChannel *source,
   return TRUE;
 }
 
-static gboolean xv_events_init (TVoutCtl *ctl)
+static bool xv_events_init (TVoutCtl *ctl)
 {
   GIOStatus s;
   int r;
 
   ctl->io = g_io_channel_unix_new (ConnectionNumber (ctl->dpy));
   if (!ctl->io)
-    return FALSE;
+    return false;
 
   s = g_io_channel_set_encoding (ctl->io, NULL, NULL);
   if (s != G_IO_STATUS_NORMAL) {
     g_io_channel_unref (ctl->io);
-    return FALSE;
+    return false;
   }
 
   g_io_channel_set_buffered (ctl->io, FALSE);
@@ -228,47 +229,47 @@ static gboolean xv_events_init (TVoutCtl *ctl)
   ctl->watch = g_io_add_watch (ctl->io, G_IO_IN | G_IO_PRI, xv_io_func, ctl);
   if (!ctl->watch) {
     g_io_channel_unref (ctl->io);
-    return FALSE;
+    return false;
   }
 
-  r = XvSelectPortNotify (ctl->dpy, ctl->port, TRUE);
+  r = XvSelectPortNotify (ctl->dpy, ctl->port, True);
   if (r != Success) {
     g_source_remove (ctl->watch);
     g_io_channel_unref (ctl->io);
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 static void xv_events_exit (TVoutCtl *ctl)
 {
-  XvSelectPortNotify (ctl->dpy, ctl->port, FALSE);
+  XvSelectPortNotify (ctl->dpy, ctl->port, False);
   g_source_remove (ctl->watch);
   g_io_channel_unref (ctl->io);
 }
 
-static gboolean xv_update_attributes (TVoutCtl *ctl)
+static bool xv_update_attributes (TVoutCtl *ctl)
 {
   int r;
   int attr_idx;
 
-  r = XInternAtoms (ctl->dpy, (char **)atom_names, NUM_ATTRS, TRUE, ctl->atoms);
+  r = XInternAtoms (ctl->dpy, (char **)atom_names, NUM_ATTRS, True, ctl->atoms);
   if (!r)
-    return FALSE;
+    return false;
 
   for (attr_idx = 0; attr_idx < NUM_ATTRS; attr_idx++) {
     r = XvGetPortAttribute (ctl->dpy, ctl->port,
                             ctl->atoms[attr_idx],
                             &ctl->values[attr_idx]);
     if (r != Success)
-      return FALSE;
+      return false;
   }
 
-  return TRUE;
+  return true;
 }
 
-TVoutCtl *tvout_ctl_init (gpointer ui_data)
+TVoutCtl *tvout_ctl_init (void *ui_data)
 {
   TVoutCtl *ctl;
 
