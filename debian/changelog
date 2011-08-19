@@ -1,3 +1,9 @@
+maemo-tvout-control (2) fremantle; urgency=low
+
+  * Code reorganization
+
+ -- Ville Syrjala <syrjala@sci.fi>  Fri, 19 Aug 2011 05:55:05 +0300
+
 maemo-tvout-control (1) fremantle; urgency=low
 
   * Initial Release.
