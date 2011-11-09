@@ -1,3 +1,9 @@
+maemo-tvout-control (3) fremantle; urgency=low
+
+  * Avoid a potential loss of events during init
+
+ -- Ville Syrjala <syrjala@sci.fi>  Wed,  9 Nov 2011 17:10:47 +0200
+
 maemo-tvout-control (2) fremantle; urgency=low
 
   * Code reorganization
