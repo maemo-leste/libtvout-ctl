@@ -49,6 +49,7 @@ struct _TVoutCtl {
   Atom atoms[NUM_ATTRS];
   int values[NUM_ATTRS];
   void *ui_data;
+  bool inited;
 };
 
 static bool xv_init (TVoutCtl *ctl)
@@ -136,6 +137,9 @@ static void xv_exit (TVoutCtl *ctl)
 
 static void update_ui (TVoutCtl *ctl, int attr_idx, int value)
 {
+  if (!ctl->inited)
+    return;
+
   switch (attr_idx) {
   case ATTR_ENABLE:
     tvout_ui_set_enable (ctl->ui_data, value);
@@ -244,6 +248,8 @@ TVoutCtl *tvout_ctl_init (void *ui_data)
   if (!ctl)
     return NULL;
 
+  ctl->inited = false;
+
   if (!xv_init (ctl)) {
     free (ctl);
     return NULL;
@@ -262,7 +268,10 @@ TVoutCtl *tvout_ctl_init (void *ui_data)
     return NULL;
   }
 
+  xv_io_func (ctl);
+
   ctl->ui_data = ui_data;
+  ctl->inited = true;
 
   return ctl;
 }
