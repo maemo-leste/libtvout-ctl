@@ -1,6 +1,6 @@
 /*
  * Maemo TV out control
- * Copyright (C) 2010-2011  Ville Syrjälä <syrjala@sci.fi>
+ * Copyright (C) 2010-2012  Ville Syrjälä <syrjala@sci.fi>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,8 +48,8 @@ struct _TVoutCtl {
   int event_base;
   Atom atoms[NUM_ATTRS];
   int values[NUM_ATTRS];
+  TVoutCtlNotify ui_notify;
   void *ui_data;
-  bool inited;
 };
 
 static bool xv_init (TVoutCtl *ctl)
@@ -137,21 +137,21 @@ static void xv_exit (TVoutCtl *ctl)
 
 static void update_ui (TVoutCtl *ctl, int attr_idx, int value)
 {
-  if (!ctl->inited)
+  if (!ctl->ui_notify)
     return;
 
   switch (attr_idx) {
   case ATTR_ENABLE:
-    tvout_ui_set_enable (ctl->ui_data, value);
+    ctl->ui_notify (ctl->ui_data, TVOUT_CTL_ENABLE, value);
     break;
   case ATTR_TV_STD:
-    tvout_ui_set_tv_std (ctl->ui_data, value);
+    ctl->ui_notify (ctl->ui_data, TVOUT_CTL_TV_STD, value);
     break;
   case ATTR_ASPECT:
-    tvout_ui_set_aspect (ctl->ui_data, value);
+    ctl->ui_notify (ctl->ui_data, TVOUT_CTL_ASPECT, value);
     break;
   case ATTR_SCALE:
-    tvout_ui_set_scale (ctl->ui_data, value);
+    ctl->ui_notify (ctl->ui_data, TVOUT_CTL_SCALE, value);
     break;
   }
 }
@@ -240,15 +240,13 @@ static bool xv_update_attributes (TVoutCtl *ctl)
   return true;
 }
 
-TVoutCtl *tvout_ctl_init (void *ui_data)
+TVoutCtl *tvout_ctl_init (TVoutCtlNotify ui_notify, void *ui_data)
 {
   TVoutCtl *ctl;
 
-  ctl = malloc (sizeof *ctl);
+  ctl = calloc (1, sizeof *ctl);
   if (!ctl)
     return NULL;
-
-  ctl->inited = false;
 
   if (!xv_init (ctl)) {
     free (ctl);
@@ -270,8 +268,8 @@ TVoutCtl *tvout_ctl_init (void *ui_data)
 
   xv_io_func (ctl);
 
+  ctl->ui_notify = ui_notify;
   ctl->ui_data = ui_data;
-  ctl->inited = true;
 
   return ctl;
 }
@@ -319,24 +317,34 @@ static void xv_set_attribute (TVoutCtl *ctl, int attr_idx, int value)
   xv_io_func (ctl);
 }
 
-void tvout_ctl_set_enable (TVoutCtl *ctl, int value)
+int tvout_ctl_set (TVoutCtl *ctl, enum TVoutCtlAttr attr, int value)
 {
-  xv_set_attribute (ctl, ATTR_ENABLE, value);
-}
+  switch (attr) {
+  case TVOUT_CTL_ENABLE:
+    if (value < 0 || value > 1)
+      return -1;
+    xv_set_attribute (ctl, ATTR_ENABLE, value);
+    break;
+  case TVOUT_CTL_TV_STD:
+    if (value < 0 || value > 1)
+      return -1;
+    xv_set_attribute (ctl, ATTR_TV_STD, value);
+    break;
+  case TVOUT_CTL_ASPECT:
+    if (value < 0 || value > 1)
+      return -1;
+    xv_set_attribute (ctl, ATTR_ASPECT, value);
+    break;
+  case TVOUT_CTL_SCALE:
+    if (value < 1 || value > 100)
+      return -1;
+    xv_set_attribute (ctl, ATTR_SCALE, value);
+    break;
+  default:
+    return -1;
+  }
 
-void tvout_ctl_set_tv_std (TVoutCtl *ctl, int value)
-{
-  xv_set_attribute (ctl, ATTR_TV_STD, value);
-}
-
-void tvout_ctl_set_aspect (TVoutCtl *ctl, int value)
-{
-  xv_set_attribute (ctl, ATTR_ASPECT, value);
-}
-
-void tvout_ctl_set_scale (TVoutCtl *ctl, int value)
-{
-  xv_set_attribute (ctl, ATTR_SCALE, value);
+  return 0;
 }
 
 static int get_attribute (TVoutCtl *ctl, int attr_idx)
@@ -347,22 +355,18 @@ static int get_attribute (TVoutCtl *ctl, int attr_idx)
   return ctl->values[attr_idx];
 }
 
-int tvout_ctl_get_enable (TVoutCtl *ctl)
+int tvout_ctl_get (TVoutCtl *ctl, enum TVoutCtlAttr attr)
 {
-  return get_attribute (ctl, ATTR_ENABLE);
-}
-
-int tvout_ctl_get_tv_std (TVoutCtl *ctl)
-{
-  return get_attribute (ctl, ATTR_TV_STD);
-}
-
-int tvout_ctl_get_aspect (TVoutCtl *ctl)
-{
-  return get_attribute (ctl, ATTR_ASPECT);
-}
-
-int tvout_ctl_get_scale (TVoutCtl *ctl)
-{
-  return get_attribute (ctl, ATTR_SCALE);
+  switch (attr) {
+  case TVOUT_CTL_ENABLE:
+    return get_attribute (ctl, ATTR_ENABLE);
+  case TVOUT_CTL_TV_STD:
+    return get_attribute (ctl, ATTR_TV_STD);
+  case TVOUT_CTL_ASPECT:
+    return get_attribute (ctl, ATTR_ASPECT);
+  case TVOUT_CTL_SCALE:
+    return get_attribute (ctl, ATTR_SCALE);
+  default:
+    return -1;
+  }
 }

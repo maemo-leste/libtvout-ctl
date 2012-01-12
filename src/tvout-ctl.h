@@ -1,6 +1,6 @@
 /*
  * Maemo TV out control
- * Copyright (C) 2010-2011  Ville Syrjälä <syrjala@sci.fi>
+ * Copyright (C) 2010-2012  Ville Syrjälä <syrjala@sci.fi>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,26 +26,28 @@ extern "C" {
 
 typedef struct _TVoutCtl TVoutCtl;
 
-TVoutCtl *tvout_ctl_init (void *ui_data);
-void tvout_ctl_exit (TVoutCtl *ctl);
+enum TVoutCtlAttr {
+	TVOUT_CTL_ENABLE,
+	TVOUT_CTL_TV_STD,
+	TVOUT_CTL_ASPECT,
+	TVOUT_CTL_SCALE,
+	TVOUT_CTL_DYNAMIC_ASPECT,
+	TVOUT_CTL_XOFFSET,
+	TVOUT_CTL_YOFFSET,
+	TVOUT_CTL_FULLSCREEN_VIDEO,
+};
 
-int tvout_ctl_fd (TVoutCtl *ctl);
-void tvout_ctl_fd_ready (TVoutCtl *ctl);
+typedef void (*TVoutCtlNotify)(void *ui_data, enum TVoutCtlAttr attr, int value);
 
-void tvout_ctl_set_enable (TVoutCtl *ctl, int value);
-void tvout_ctl_set_tv_std (TVoutCtl *ctl, int value);
-void tvout_ctl_set_aspect (TVoutCtl *ctl, int value);
-void tvout_ctl_set_scale (TVoutCtl *ctl, int value);
+TVoutCtl *tvout_ctl_init(TVoutCtlNotify ui_notify, void *ui_data);
 
-int tvout_ctl_get_enable (TVoutCtl *ctl);
-int tvout_ctl_get_tv_std (TVoutCtl *ctl);
-int tvout_ctl_get_aspect (TVoutCtl *ctl);
-int tvout_ctl_get_scale (TVoutCtl *ctl);
+void tvout_ctl_exit(TVoutCtl *ctl);
 
-void tvout_ui_set_enable (void *ui_data, int value);
-void tvout_ui_set_tv_std (void *ui_data, int value);
-void tvout_ui_set_aspect (void *ui_data, int value);
-void tvout_ui_set_scale (void *ui_data, int value);
+int tvout_ctl_fd(TVoutCtl *ctl);
+void tvout_ctl_fd_ready(TVoutCtl *ctl);
+
+int tvout_ctl_set(TVoutCtl *ctl, enum TVoutCtlAttr attr, int value);
+int tvout_ctl_get(TVoutCtl *ctl, enum TVoutCtlAttr attr);
 
 #ifdef __cplusplus
 }
