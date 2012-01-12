@@ -1,33 +1,26 @@
-This is maemo-tvout-control written by Ville Syrjälä <syrjala@sci.fi
+This is libtvout-ctl, written and maintained by Ville Syrjälä <syrjala@sci.fi>
+on Thu, 12 Jan 2012 07:39:20 +0200.
 
-Packaged for Maemo Extras by Thomas Perl <m@thp.io>
-on Thu, 13 Jan 2011 06:53:13 -0500.
+The original source can always be found at:
+	https://gitorious.org/maemo-tvout-control/libtvout-ctl
 
-The original source code can be downloaded via Git from:
-        http://gitorious.org/maemo-tvout-control
-
-Copyright Holder:
-
-    Copyright (C) 2010  Ville Syrjälä <syrjala@sci.fi>
+Copyright Holder:  Ville Syrjälä
 
 License:
 
-/*
- * Maemo TV out control home plugin
- * Copyright (C) 2010  Ville Syrjälä <syrjala@sci.fi>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this package; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.

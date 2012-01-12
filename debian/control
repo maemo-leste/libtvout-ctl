@@ -1,40 +1,22 @@
-Source: maemo-tvout-control
-Section: user/desktop
+Source: libtvout-ctl
 Priority: extra
-Maintainer: Thomas Perl <m@thp.io>
-Build-Depends: debhelper (>= 5), autotools-dev, libxv-dev, libhildondesktop1-dev
+Maintainer: Ville Syrjälä <syrjala@sci.fi>
+Build-Depends: debhelper (>= 5), autotools-dev, autoconf, automake, libtool, libxv-dev
 Standards-Version: 3.7.2
-XSBC-Bugtracker: http://talk.maemo.org/showthread.php?t=68294
+Section: libs
 
-Package: maemo-tvout-control
+Package: libtvout-ctl-dev
+Section: libdevel
+Architecture: any
+Depends: libtvout-ctl (= ${Source-Version})
+Description: Development files for libtvout-ctl
+ Files needed to develop using libtvout-ctl.
+
+Package: libtvout-ctl
+Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-XB-Maemo-Display-Name: TV out control desktop widget
-Description: Set the aspect ratio and scaling of the N900's TV out
- This desktop applet allows you to control different parameters
+Description: Library to control N900 TV out parameters
+ This library allows you to control different parameters
  of the N900's TV out (enable/disable, PAL/NTSC, aspect ratio
- and scaling factor) that are not available in the control panel.
- .
- The widget was developed by Ville Syrjälä <syrjala@sci.fi>.
-XSBC-Maemo-Icon-26: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0
- d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAx5JREFUeNrsmd9r2lAUx+9N
- tLAxUfew2lHGYKAvw5eCg71M8MF/RPYn7GF/wB72DwjDV/8In+YYDDbwYbJu
- qFTrdNradtW2RquJ2bmpN2ZZbMwPo7IcOGiCST/fe37ckxSLoog22Ri04eYK
- cAW4AlwBroD/W4BHfQJjzBaLxTeBQODVOoF2u9230Wj0NUwOwq0CwB6AJyaT
- ybotdmLK1tYT4BMEAREndti8Ar9cCfHjXR/4Pen7lMe3iABEVp9GoNq4QB8+
- H61EwItnInr08K7MtFAN0B/TCIgrSqXRWEDnXU7mMCyAXuD0uN3nRuhb6Rgd
- Nrpo+/5TmcOQAKLaaQFKcGrkb1MOGgnjKURaK8MsFXy/3EG1KThm2X8W01IK
- wcYAN/XYDn5y1ofu1kO15g04493S2GYZcyn0Vw2Q+6hWxRL47wHar5zCJycd
- s1rg8q7KmK+BWc5BBDweW8C/V86kT2lxPVv6F0H0KYfhGpAjADdhLKRQq9NH
- lXpvBu7dWvhaEduQQlIETAiot67Qj+o54ga8fqrMzSALAmZdyFgE6u0+gHcR
- N+SlYZcxAa6MgKkupNwHYPkXisDPIwCvXdgCrlXEpvcB8pN5ERjzE3Twqw/w
- nAzO2gGuaKPWRwmNGhjzIqoCOIEnIqQV99gIbrWNqjcyGoGxIAI0h6ot7gYc
- Q3S8S5wv8MT6PkA2sgHPoGqbQ43OUFr9pYPLAkbAMTJeA8ohqnE6Ru+L0wca
- 7IUcd/KJndcdKnW7EDcS7ekopiIwtKEL4SUV6IJFbLkLJZ6cSL4qo9wWRon1
- MEMCstlsIZlM7tBjlmV9xJ0EhtS5JE6Pc7lcQTPL1NWNMd6Fjxh4kp6Lx+N7
- kUhkz0kBpVKpkM/nldB58I/A29SLAHnv8pXMZfRELBZ7GQqFHBXg9/uJgHfK
- l3Pqd0LzBJCyP1Ac7wSDwetwOOxozl+DkccJLWjdGlBbOp0up1KpgpMCMplM
- eaFOq1ED6t/cmdbEc3CnNgQyP3wC/0ImGfWUYFSAlJLg2w53zmPwntaYc6uA
- TTP3PzSuAFeAK2C19keAAQCO3xW+//ne4wAAAABJRU5ErkJggg==
- ====
-
+ and scaling factor).

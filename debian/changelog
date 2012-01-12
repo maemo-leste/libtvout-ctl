@@ -1,23 +1,5 @@
-maemo-tvout-control (4) fremantle; urgency=low
-
-  * TVoutCtl API change
-
- -- Ville Syrjala <syrjala@sci.fi>  Thu, 12 Jan 2012 06:40:25 +0200
-
-maemo-tvout-control (3) fremantle; urgency=low
-
-  * Avoid a potential loss of events during init
-
- -- Ville Syrjala <syrjala@sci.fi>  Wed,  9 Nov 2011 17:10:47 +0200
-
-maemo-tvout-control (2) fremantle; urgency=low
-
-  * Code reorganization
-
- -- Ville Syrjala <syrjala@sci.fi>  Fri, 19 Aug 2011 05:55:05 +0300
-
-maemo-tvout-control (1) fremantle; urgency=low
+libtvout-ctl (1) unstable; urgency=low
 
   * Initial Release.
 
- -- Thomas Perl <m@thp.io>  Thu, 13 Jan 2011 06:53:13 -0500
+ -- Ville Syrjälä <syrjala@sci.fi>  Thu, 12 Jan 2012 07:39:20 +0200
