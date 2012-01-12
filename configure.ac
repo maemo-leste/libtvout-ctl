@@ -16,5 +16,6 @@ AC_PROG_LIBTOOL
 PKG_CHECK_MODULES([XV],[x11 xv])
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+		 tvout-ctl.pc])
 AC_OUTPUT
