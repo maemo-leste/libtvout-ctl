@@ -4,8 +4,8 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: libtvout-ctl
-Description: Library to control N900 TV out parameters
-Requires.private: x11 xv
+Description: Library to control N900/N9/N950 TV out parameters
+Requires.private: @BACKEND_MODULES@
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -ltvout-ctl
 Cflags: -I${includedir}
