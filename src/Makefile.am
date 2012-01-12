@@ -1,23 +1,17 @@
-homeplugindir = @homeplugindir@
+lib_LTLIBRARIES = \
+	libtvout-ctl.la
 
-homeplugin_LTLIBRARIES = \
-	tvout-home-plugin.la
-
-tvout_home_plugin_la_CFLAGS = \
-	@HILDON_CFLAGS@ \
+libtvout_ctl_la_CFLAGS = \
 	@XV_CFLAGS@
 
-tvout_home_plugin_la_LIBADD = \
-	@HILDON_LIBS@ \
+libtvout_ctl_la_LIBADD = \
 	@XV_LIBS@
 
-tvout_home_plugin_la_LDFLAGS = \
-	-avoid-version \
-	-module \
-	-shared
+libtvout_ctl_la_LDFLAGS = \
+	-version-info 0:0:0
 
-tvout_home_plugin_la_SOURCES = \
-	tvout-ctl.c \
-	tvout-ctl.h \
-	tvout-home-plugin.c \
-	tvout-home-plugin.h
+libtvout_ctl_la_SOURCES = \
+	tvout-ctl.c
+
+include_HEADERS = \
+	tvout-ctl.h
