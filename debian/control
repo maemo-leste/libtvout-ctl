@@ -1,7 +1,7 @@
 Source: libtvout-ctl
 Priority: extra
 Maintainer: Ville Syrjälä <syrjala@sci.fi>
-Build-Depends: debhelper (>= 5), autotools-dev, autoconf, automake, libtool, libxv-dev
+Build-Depends: debhelper (>= 5), autotools-dev, autoconf, automake, libtool, pkg-config, libxv-dev
 Standards-Version: 3.7.2
 Section: libs
 
