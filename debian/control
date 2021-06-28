@@ -1,14 +1,18 @@
 Source: libtvout-ctl
 Priority: extra
 Maintainer: Ville Syrjälä <syrjala@sci.fi>
-Build-Depends: debhelper (>= 5), autotools-dev, autoconf, automaken, libtool, pkg-config, libxv-dev
-Standards-Version: 3.7.2
+Build-Depends:
+ debhelper-compat (= 12),
+ libtool,
+ pkg-config,
+ libxv-dev
+Standards-Version: 4.3.0
 Section: libs
 
 Package: libtvout-ctl-dev
 Section: libdevel
 Architecture: any
-Depends: libtvout-ctl (= ${Source-Version})
+Depends: libtvout-ctl (= ${source:Version})
 Description: Development files for libtvout-ctl
  Files needed to develop using libtvout-ctl.
 
